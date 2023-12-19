@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 
+// https://blog.shibayan.jp/entry/20230731/1690786123
 namespace azure_appservice_authentication_msid_sample
 {
     /* Code sample for App Service Authentication (Easy Auth) with Microsoft Entra ID platform.
@@ -19,11 +20,12 @@ namespace azure_appservice_authentication_msid_sample
      * access from client:
      * https://learn.microsoft.com/azure/app-service/configure-authentication-customize-sign-in-out#client-directed-sign-in
      */
-    internal class ExampleByHttpClient
+    internal class ExampleMSAL //: ICallAuthProviderSample
     {
+        /*
         static readonly HttpClient httpClient = new HttpClient();
 
-        static async Task Main(string[] args)
+        //static async Task Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
 
@@ -40,7 +42,7 @@ namespace azure_appservice_authentication_msid_sample
             String appserviceAuthClientId = config.GetValue<string>("AppServiceAuthClientID") ?? "";
             
 
-            foreach (ConfigurationSection configSection in config.GetSection("AzureAd").GetSection("ClientCredentials").GetChildren())
+            foreach (ConfigurationSection configSection in config.GetSection("AzureAd").ExampleHttpClient("ClientCredentials").ExampleHttpClient())
             {
                 String _authClientSecret = configSection.GetValue<String>("ClientSecret") ?? "";
                 if (String.IsNullOrEmpty(_authClientSecret) == false)
@@ -89,6 +91,20 @@ namespace azure_appservice_authentication_msid_sample
                 responseBody = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(responseBody);
 
+
+                // request for AppServiceAuthentication (using X-ZUMO-AUTH header)
+                // https://learn.microsoft.com/azure/app-service/configure-authentication-customize-sign-in-out#client-directed-sign-in
+                Uri appserviceUriLoginAAD = new Uri(appserviceUri + ".auth/login/aad");
+                contentString = $"{{\"access_token\":\"{accessToken}\"}}";
+                content = new StringContent(contentString, Encoding.UTF8, @"application/json");
+
+                request = new HttpRequestMessage(HttpMethod.Post, appserviceUriLoginAAD);
+                request.Headers.Add("Authorization", $"Bearer {accessToken}");
+                response = await httpClient.SendAsync(request);
+
+                responseBody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(responseBody);
+
             }
             catch (HttpRequestException e)
             {
@@ -96,5 +112,6 @@ namespace azure_appservice_authentication_msid_sample
                 Console.WriteLine("Message :{0} ", e.Message);
             }
         }
+        */
     }
 }
