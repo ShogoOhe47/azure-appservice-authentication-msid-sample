@@ -47,7 +47,8 @@ namespace azure_appservice_authentication_msid_sample
 
             Program p = new Program();
 
-            ICallAuthProviderSample authClient = new ExampleHttpClient(p.authInstance, p.appserviceAuthClientId);
+            //ICallAuthProviderSample authClient = new ExampleHttpClient(p.authInstance, p.appserviceAuthClientId);
+            ICallAuthProviderSample authClient = new ExampleMSAL(p.authInstance, p.appserviceAuthClientId);
             String token = await authClient.getToken(p.authTenantId, p.authClientId, p.authClientSecret);
             String contents = await authClient.accessAppService(p.appServiceSiteUri, token);
 
